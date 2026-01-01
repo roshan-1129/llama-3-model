@@ -6,21 +6,21 @@ from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-# ------------------ ENV ------------------
+
 load_dotenv()
 
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_PROJECT"] = os.getenv("LANGCHAIN_PROJECT")
 
-# ------------------ PAGE CONFIG ------------------
+#page
 st.set_page_config(
     page_title="AI Chatbot",
     page_icon="🤖",
     layout="centered"
 )
 
-# ------------------ CUSTOM CSS ------------------
+# css
 st.markdown("""
 <style>
 /* Entire app background */
@@ -73,10 +73,10 @@ h1 {
 </style>
 """, unsafe_allow_html=True)
 
-# ------------------ TITLE ------------------
+
 st.title("🤖 LangChain Chatbot (LLaMA 3)")
 
-# ------------------ PROMPT ------------------
+
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", "You are a helpful, professional AI assistant."),
@@ -84,33 +84,32 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-# ------------------ LLM ------------------
+#llm model
 llm = Ollama(model="llama3")
 output_parser = StrOutputParser()
 chain = prompt | llm | output_parser
 
-# ------------------ SESSION STATE ------------------
+
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# ------------------ INPUT ------------------
+
 input_text = st.text_input("💬 Ask something...", placeholder="Type your question here...")
 
-# ------------------ PROCESS ------------------
 if input_text:
     response = chain.invoke({"question": input_text})
 
     st.session_state.chat_history.append(("user", input_text))
     st.session_state.chat_history.append(("bot", response))
 
-# ------------------ CHAT DISPLAY ------------------
+
 for role, message in st.session_state.chat_history:
     if role == "user":
         st.markdown(f"<div class='user-msg'>🧑 {message}</div>", unsafe_allow_html=True)
     else:
         st.markdown(f"<div class='bot-msg'>🤖 {message}</div>", unsafe_allow_html=True)
 
-# ------------------ FOOTER ------------------
+
 st.markdown(
     "<div class='footer'>Powered by LangChain • Ollama • LLaMA 3</div>",
     unsafe_allow_html=True
@@ -119,4 +118,5 @@ st.markdown(
     "<div class='footer'>Developed by ROSHAN S</div>",
     unsafe_allow_html=True
 )
+
 
